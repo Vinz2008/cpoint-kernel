@@ -21,7 +21,7 @@ kernel.o: kernel.c
 	$(CC) -c $^ -o $@ -std=gnu99 -ffreestanding -O2 -Wall -Wextra
 
 clean:
-	rm -f ./*.o ./*.bin
+	rm -f ./*.o ./*.bin ./*.ll ./*.iso
 	rm -rf isodir
 
 check:
