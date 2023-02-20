@@ -1,0 +1,48 @@
+var terminal_row : double = 0
+var terminal_column : double = 0
+var terminal_color : int = 0
+var terminal_buffer : int ptr = 0
+var const VGA_WIDTH = 80
+var const VGA_HEIGHT = 25
+func vga_entry_color(fg : int bg : int) int {
+    fg | bg << 4
+}
+func vga_entry(uc : int color: int) int {
+    uc | color << 8
+}
+func terminal_initialize() double {
+    terminal_row = 0
+    terminal_column = 0
+    terminal_buffer = 753664
+    terminal_color = vga_entry_color(7, 0)
+    for y = 0, y < VGA_HEIGHT, 1.0 {
+        for x = 0, x < VGA_WIDTH, 1.0 {
+            var index = y * VGA_WIDTH + x
+            vga_entry(32, terminal_color)
+        }
+    }
+}
+func terminal_setcolor(color : int){
+    terminal_color = color
+}
+func terminal_putentryat(c : i8 color : int x : double y : double) void {
+    var index : double = y * VGA_WIDTH + x
+}
+func terminal_putchar(c : i8){
+    terminal_putentryat(c, terminal_color, terminal_column, terminal_row)
+    terminal_column = terminal_column + 1
+    if terminal_column == VGA_WIDTH {
+        terminal_column = 0
+        terminal_row = terminal_row + 1
+        if terminal_row == VGA_HEIGHT {
+            terminal_row = 0
+        } else {
+            terminal_row = terminal_row
+        }
+    } else {
+        terminal_column = terminal_column
+    }
+}
+func kernel_main() void {
+    terminal_initialize()
+}
