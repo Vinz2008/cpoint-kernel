@@ -11,7 +11,8 @@ func vga_entry(uc : int, color: int) int {
     uc | color << 8
 }
 func strlen(str : i8 ptr){
-    10
+    var len : int = 0
+    len
 }
 func terminal_initialize() double {
     terminal_row = 0
