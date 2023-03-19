@@ -1,18 +1,16 @@
+extern strlen(str : i8 ptr) int;
+extern write_to_screen(buf : i16 ptr, c : i8, index : int, terminal_color : int) void;
 var terminal_row : double = 0
 var terminal_column : double = 0
-var terminal_color : int = 0
+var terminal_color : i8 = 0
 var terminal_buffer : int ptr = 0
-var const VGA_WIDTH = 80
-var const VGA_HEIGHT = 25
+var const VGA_WIDTH : int = 80
+var const VGA_HEIGHT : int = 25
 func vga_entry_color(fg : int, bg : int) int {
     fg | bg << 4
 }
 func vga_entry(uc : int, color: int) int {
     uc | color << 8
-}
-func strlen(str : i8 ptr){
-    var len : int = 0
-    len
 }
 func terminal_initialize() double {
     terminal_row = 0
@@ -22,7 +20,7 @@ func terminal_initialize() double {
     for y = 0, y < VGA_HEIGHT, 1.0 {
         for x = 0, x < VGA_WIDTH, 1.0 {
             var index = y * VGA_WIDTH + x
-            vga_entry(32, terminal_color)
+            write_to_screen(terminal_buffer, ' ', index, terminal_color)
         }
     }
 }
@@ -30,7 +28,8 @@ func terminal_setcolor(color : int){
     terminal_color = color
 }
 func terminal_putentryat(c : i8, color : int, x : double, y : double) void {
-    var index : double = y * VGA_WIDTH + x
+    var index : i32 = y * VGA_WIDTH + x
+    write_to_screen(terminal_buffer, c, index, 15)
 }
 func terminal_putchar(c : i8){
     terminal_putentryat(c, terminal_color, terminal_column, terminal_row)
@@ -48,7 +47,7 @@ func terminal_write(data : i8 ptr, size : int) int {
         terminal_putchar(data)
     }
 }
-func terminal_writestring(data : i8 ptr){
+func terminal_writestring(data : i8 ptr) void {
     terminal_write(data, strlen(data))
 }
 func kernel_main() void {
