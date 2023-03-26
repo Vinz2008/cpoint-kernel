@@ -3,7 +3,7 @@ CC=clang --target=i686-pc-none-elf -march=i686 -v
 AS=$(TARGET)-as
 CPOINT=cpoint -target-triplet i686-pc-none -no-std -no-gc
 
-all: kernel_cpoint.bin
+all: clean kernel_cpoint.bin
 
 kernel_cpoint.bin: boot.o c/utils.o cpoint.o
 	$(CC) -T linker.ld -o $@ -ffreestanding -O2 -nostdlib $^ -lgcc

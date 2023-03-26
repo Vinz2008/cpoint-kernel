@@ -6,20 +6,20 @@ var terminal_color : i8 = 0
 var terminal_buffer : int ptr = 0
 var const VGA_WIDTH : int = 80
 var const VGA_HEIGHT : int = 25
-func vga_entry_color(fg : int, bg : int) int {
-    fg | bg << 4
+func vga_entry_color(fg : int, bg : int) i8 {
+    fg | (bg << 4)
 }
-func vga_entry(uc : int, color: int) int {
-    uc | color << 8
+func vga_entry(uc : int, color: int) i16 {
+    uc | (color << 8)
 }
-func terminal_initialize() double {
+func terminal_initialize() void {
     terminal_row = 0
     terminal_column = 0
     terminal_buffer = 753664
     terminal_color = vga_entry_color(7, 0)
     for y = 0, y < VGA_HEIGHT, 1.0 {
         for x = 0, x < VGA_WIDTH, 1.0 {
-            var index = y * VGA_WIDTH + x
+            var index = (y * VGA_WIDTH) + x
             write_to_screen(terminal_buffer, ' ', index, terminal_color)
         }
     }
