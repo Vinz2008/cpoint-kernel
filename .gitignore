@@ -3,3 +3,4 @@
 *.ll
 *.iso
 isodir
+*.temp
