@@ -2,18 +2,22 @@ extern strlen(str : i8 ptr) int;
 extern write_to_screen(c : i8, index : int, terminal_color : int, terminal_column : int, terminal_row : int) void;
 extern write_to_screen_complete( string : i8 ptr) void;
 extern terminal_write(data : i8 ptr, size : int) int;
+
 var terminal_row : double = 0
 var terminal_column : double = 0
 var terminal_color : i8 = 0
 var terminal_buffer : int ptr = 0
 var const VGA_WIDTH : int = 80
 var const VGA_HEIGHT : int = 25
+
 func vga_entry_color(fg : int, bg : int) i8 {
     fg | (bg << 4)
 }
+
 func vga_entry(uc : int, color: int) i16 {
     uc | (color << 8)
 }
+
 func terminal_initialize() void {
     terminal_row = 0
     terminal_column = 0
@@ -26,13 +30,16 @@ func terminal_initialize() void {
         }
     }
 }
+
 func terminal_setcolor(color : int){
     terminal_color = color
 }
+
 func terminal_putentryat(c : i8, color : int, x : double, y : double) void {
     var index : i32 = y * VGA_WIDTH + x
     write_to_screen(c, index, terminal_color,terminal_column, terminal_row)
 }
+
 func terminal_putchar(c : i8){
     terminal_putentryat(c, terminal_color, terminal_column, terminal_row)
     terminal_column = terminal_column + 1
@@ -44,9 +51,11 @@ func terminal_putchar(c : i8){
         }
     }
 }
+
 func terminal_writestring(data : i8 ptr) void {
     terminal_write(data, strlen(data))
 }
+
 func kernel_main() void {
     terminal_initialize()
     terminal_writestring("Hello, kernel World!\n")
