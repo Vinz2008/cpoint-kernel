@@ -11,11 +11,11 @@ var const VGA_WIDTH : int = 80
 var const VGA_HEIGHT : int = 25
 
 func vga_entry_color(fg : int, bg : int) i8 {
-    fg | (bg << 4)
+    fg | bg << 4
 }
 
 func vga_entry(uc : int, color: int) i16 {
-    uc | (color << 8)
+    uc | color << 8
 }
 
 func terminal_initialize() void {
@@ -25,7 +25,7 @@ func terminal_initialize() void {
     terminal_color = vga_entry_color(7, 0)
     for y = 0, y < VGA_HEIGHT, 1.0 {
         for x = 0, x < VGA_WIDTH, 1.0 {
-            var index = (y * VGA_WIDTH) + x
+            var index = y * VGA_WIDTH + x
             write_to_screen(' ', index, terminal_color, terminal_column, terminal_row)
         }
     }
