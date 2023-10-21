@@ -8,7 +8,11 @@ static size_t terminal_column;
 static uint16_t* terminal_buffer;
 static uint8_t terminal_color;
 
-int vga_entry(int uc, int color);
+
+extern int vga_entry(int uc, int color);
+extern char vga_entry_color(int fg, int bg);
+extern double terminal_putchar(char c);
+
 size_t strlen(const char* str) {
 	size_t len = 0;
 	while (str[len])
@@ -33,6 +37,10 @@ void write_to_screen_complete(char* data){
 		terminal_column++;
 	}
 	
+}
+
+uint16_t getting_data_to_write(char* data, uint16_t terminal_col, int pos){
+    return (uint16_t) data[pos] | (uint16_t) terminal_col << 8;
 }
 
 void terminal_write(const char* data, size_t size) {
