@@ -3,19 +3,21 @@ extern write_to_screen(c : i8, index : int, terminal_color : int, terminal_colum
 extern write_to_screen_complete( string : i8 ptr) void;
 extern terminal_write(data : i8 ptr, size : int) int;
 extern getting_data_to_write(data : i8 ptr, terminal_col : u16, pos : int) u16;
+extern write_to_buffer(index : u16, data : u16 ptr, i : int, terminal_col : u8) void;
 
-var terminal_row : int = 0
-var terminal_column : int = 0
-var terminal_color : i8 = 0
-var terminal_buffer : i16 ptr = 0
-var const VGA_WIDTH : int = 80
-var const VGA_HEIGHT : int = 25
+
+var terminal_row : int = 0;
+var terminal_column : int = 0;
+var terminal_color : i8 = 0;
+var terminal_buffer : i16 ptr;
+var const VGA_WIDTH : int = 80;
+var const VGA_HEIGHT : int = 25;
 
 func vga_entry_color(fg : int, bg : int) i8 {
     fg | bg << 4
 }
 
-func vga_entry(uc : int, color: int) i16 {
+func vga_entry(uc : i8, color: i8) i16 {
     uc | color << 8
 }
 
@@ -65,7 +67,8 @@ func terminal_write_cpoint(data : i8 ptr){
     for i = 0, i < size, 1.0 {
         var index : int = terminal_row * VGA_WIDTH + terminal_column
         // terminal_buffer[index] = (cast u16 data[i]) | (cast u16 (terminal_color << 8))
-        terminal_buffer[index] = getting_data_to_write(data, terminal_color, i)
+        // terminal_buffer[index] = getting_data_to_write(data, terminal_color, i)
+        write_to_buffer(index, data, i, terminal_color)
         terminal_column = terminal_column + 1
     }
 }
@@ -73,6 +76,6 @@ func terminal_write_cpoint(data : i8 ptr){
 func kernel_main() void {
     terminal_initialize()
     // terminal_writestring("Hello, kernel World!\n")
-    write_to_screen_complete("Hello World\n")
-    // terminal_write_cpoint("Hello from cpoint\n")
+    // write_to_screen_complete("Hello World\n")
+    terminal_write_cpoint("Hello from cpoint\n")
 }

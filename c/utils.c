@@ -39,6 +39,11 @@ void write_to_screen_complete(char* data){
 	
 }
 
+
+void write_to_buffer(uint16_t index, uint16_t* data, int i, uint8_t terminal_col){
+    terminal_buffer[index] = (uint16_t) data[i] | (uint16_t) terminal_col << 8;
+}
+
 uint16_t getting_data_to_write(char* data, uint16_t terminal_col, int pos){
     return (uint16_t) data[pos] | (uint16_t) terminal_col << 8;
 }
