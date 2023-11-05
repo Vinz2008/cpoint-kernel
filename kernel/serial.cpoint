@@ -1,0 +1,41 @@
+extern outb(port : u16, value : u8) void;
+extern inb(port : u16) u8;
+extern strlen(str : i8 ptr) int;
+
+?[define PORT 0x3f8]
+
+func init_serial() int {
+    outb(PORT + 1, 0x00)
+    outb(PORT + 3, 0x80)
+    outb(PORT + 0, 0x03)
+    outb(PORT + 1, 0x00)
+    outb(PORT + 3, 0x03)
+    outb(PORT + 2, 0xC7)
+    outb(PORT + 4, 0x0B)
+    outb(PORT + 4, 0x1E)
+    outb(PORT + 0, 0xAE)
+    if inb(PORT + 0) != 0xAE {
+        return 1
+    }
+    outb(PORT + 4, 0x0F)
+    0
+}
+
+func is_transmit_empty() int {
+    inb(PORT + 5) & 0x20
+}
+
+func write_serial_char(a : i8) void {
+    while is_transmit_empty() == 0 {}
+    outb(PORT, a)
+}
+
+func write_serial_sized_string(s : i8 ptr, size : u32) void {
+    for i = 0, i < size, 1 {
+        write_serial_char(s[i])
+    }
+}
+
+func write_serial_string(s : i8 ptr) void {
+    write_serial_sized_string(s, strlen(s))
+}

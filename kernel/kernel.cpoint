@@ -1,10 +1,13 @@
+import serial.cpoint
+import gdt.cpoint
+
 extern strlen(str : i8 ptr) int;
 extern write_to_screen(c : i8, index : int, terminal_color : int, terminal_column : int, terminal_row : int) void;
 extern write_to_screen_complete( string : i8 ptr) void;
 extern terminal_write(data : i8 ptr, size : int) int;
 extern getting_data_to_write(data : i8 ptr, terminal_col : u16, pos : int) u16;
 extern write_to_buffer(index : u16, data : u16 ptr, i : int, terminal_col : u8) void;
-
+extern fpu_init() void;
 
 var terminal_row : int = 0;
 var terminal_column : int = 0;
@@ -74,7 +77,14 @@ func terminal_write_cpoint(data : i8 ptr){
 }
 
 func kernel_main() void {
+    init_serial()
+    // write_serial_string("test serial from cpoint")
+    // write_serial_sized_string("test serial from cpoint sized", 30)
+    write_serial_char('a')
+    fpu_init()
     terminal_initialize()
+    gdt_initialize()
+
     // terminal_writestring("Hello, kernel World!\n")
     // write_to_screen_complete("Hello World\n")
     terminal_write_cpoint("Hello from cpoint\n")
