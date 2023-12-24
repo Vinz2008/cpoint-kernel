@@ -1,0 +1,9 @@
+import stdio.cpoint
+import stdlib.cpoint
+
+func expectxplusexpr(expression : double, filename : i8 ptr, function : i8 ptr, expr_str : i8 ptr) void {
+    if expression == false {
+        printf("assertion %s failed in the %s function in %s\n", expr_str, function, filename)
+        abort()
+    }
+}

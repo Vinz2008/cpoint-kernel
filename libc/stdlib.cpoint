@@ -1,0 +1,9 @@
+import stdio.cpoint
+
+func abort() void {
+    printf("kernel panic : abort\n")
+    while true {
+
+    }
+    #unreachable()
+}

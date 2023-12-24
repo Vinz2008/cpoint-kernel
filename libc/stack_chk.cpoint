@@ -1,0 +1,11 @@
+import stdio.cpoint
+import stdlib.cpoint
+
+?[define STACK_CHK_GUARD 0xe2dee396]
+
+var __stack_chk_guard : int ptr = STACK_CHK_GUARD;
+
+func __stack_chk_fail() void {
+    printf("Stack smashing detected")
+    abort()
+}

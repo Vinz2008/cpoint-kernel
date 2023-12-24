@@ -2,16 +2,17 @@ import serial.cpoint
 import gdt.cpoint
 
 extern strlen(str : i8 ptr) int;
-extern write_to_screen(c : i8, index : int, terminal_color : int, terminal_column : int, terminal_row : int) void;
-extern write_to_screen_complete( string : i8 ptr) void;
+// extern write_to_screen(c : i8, index : int, terminal_color : int, terminal_column : int, terminal_row : int) void;
+extern write_to_screen(c : i8, index : int, terminal_color : u8) void;
+// extern write_to_screen_complete( string : i8 ptr) void;
 extern terminal_write(data : i8 ptr, size : int) int;
-extern getting_data_to_write(data : i8 ptr, terminal_col : u16, pos : int) u16;
+// extern getting_data_to_write(data : i8 ptr, terminal_col : u16, pos : int) u16;
 extern write_to_buffer(index : u16, data : u16 ptr, i : int, terminal_col : u8) void;
 extern fpu_init() void;
 
 var terminal_row : int = 0;
 var terminal_column : int = 0;
-var terminal_color : i8 = 0;
+var terminal_color : u16 = 0;
 var terminal_buffer : i16 ptr;
 var const VGA_WIDTH : int = 80;
 var const VGA_HEIGHT : int = 25;
@@ -29,24 +30,24 @@ func terminal_initialize() void {
     terminal_column = 0
     terminal_buffer = 753664
     terminal_color = vga_entry_color(7, 0)
-    for y = 0, y < VGA_HEIGHT, 1.0 {
-        for x = 0, x < VGA_WIDTH, 1.0 {
+    for y : int = 0, y < VGA_HEIGHT, 1.0 {
+        for x : int = 0, x < VGA_WIDTH, 1.0 {
             var index = y * VGA_WIDTH + x
-            write_to_screen(' ', index, terminal_color, terminal_column, terminal_row)
+            write_to_screen(' ', index, terminal_color)
         }
     }
 }
 
-func terminal_setcolor(color : int){
+func terminal_setcolor(color : int) void {
     terminal_color = color
 }
 
-func terminal_putentryat(c : i8, color : int, x : double, y : double) void {
+func terminal_putentryat(c : i8, color : int, x : int, y : int) void {
     var index : i32 = y * VGA_WIDTH + x
-    write_to_screen(c, index, terminal_color,terminal_column, terminal_row)
+    write_to_screen(c, index, terminal_color)
 }
 
-func terminal_putchar(c : i8) {
+func terminal_putchar(c : i8) int {
     terminal_putentryat(c, terminal_color, terminal_column, terminal_row)
     terminal_column = terminal_column + 1
     if terminal_column == VGA_WIDTH {
@@ -56,22 +57,25 @@ func terminal_putchar(c : i8) {
             terminal_row = 0
         }
     }
+    0
 }
 
 func terminal_writestring(data : i8 ptr) void {
     terminal_write(data, strlen(data))
 }
 
-func terminal_write_cpoint(data : i8 ptr){
+func terminal_write_cpoint(data : i8 ptr) void {
     terminal_row = 0
     terminal_column = 0
     terminal_color = vga_entry_color(7, 0)
     var size = strlen(data)
-    for i = 0, i < size, 1.0 {
+    for i : int = 0, i < size, 1.0 {
         var index : int = terminal_row * VGA_WIDTH + terminal_column
         // terminal_buffer[index] = (cast u16 data[i]) | (cast u16 (terminal_color << 8))
         // terminal_buffer[index] = getting_data_to_write(data, terminal_color, i)
-        write_to_buffer(index, data, i, terminal_color)
+        var c = data[i]
+        write_to_screen(data[0], index, terminal_color)
+        // write_to_buffer(index, data, i, terminal_color)
         terminal_column = terminal_column + 1
     }
 }

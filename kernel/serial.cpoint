@@ -31,7 +31,7 @@ func write_serial_char(a : i8) void {
 }
 
 func write_serial_sized_string(s : i8 ptr, size : u32) void {
-    for i = 0, i < size, 1 {
+    for i : int = 0, i < size, 1 {
         write_serial_char(s[i])
     }
 }
